@@ -8,16 +8,19 @@ describe('My First Test Suite', function() {
     cy.get('.search-keyword').type('ca');
     cy.wait(2000);
     cy.get('.product:visible').should('have.length', 4);
-    cy.get('.products')
+    cy.get('.products').as('productLocation');
+    cy.get('@productLocation')
       .find('.product')
       .should('have.length', 4);
-    cy.get(':nth-child(3) > .product-action > button').click();
-    cy.get('.products')
+    cy.get(':nth-child(3) > .product-action > button')
+      .click()
+      .then(() => console.log('sf'));
+    cy.get('@productLocation')
       .find('.product')
       .eq(2)
       .contains('ADD TO CART')
       .click();
-    cy.get('.products')
+    cy.get('@productLocation')
       .find('.product')
       .each(($e1, index, $list) => {
         const textVeg = $e1.find('h4.product-name').text();
@@ -25,9 +28,10 @@ describe('My First Test Suite', function() {
           $e1.find('button').click();
         }
       });
+    cy.get('.brand').should('have.text', 'GREENKART');
+    cy.get('.brand').then(logoElement => {
+      cy.log(logoElement.text());
+    });
     // fixture
-  });
-  it('My Second Test case', function() {
-    // test step
   });
 });
